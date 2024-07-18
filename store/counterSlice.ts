@@ -1,27 +1,50 @@
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CounterState {
   value: number;
+  min: number;
+  max: number;
+  amount: number;
 }
 
 const initialState: CounterState = {
   value: 0,
+  min: 0,
+  max: 10,
+  amount: 5,
 };
 
-export const counterSlice = createSlice({
+const counterSlice = createSlice({
   name: "counter",
   initialState,
   reducers: {
-    increment: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      state.value += 1;
+    increment: (
+      state,
+      action: PayloadAction<{ type?: "amount" | "min" | "max" }>
+    ) => {
+      if (action.payload?.type === "amount") {
+        state.amount += 1;
+      } else if (action.payload?.type === "min") {
+        state.min += 1;
+      } else if (action.payload?.type === "max") {
+        state.max += 1;
+      } else {
+        state.value += 1;
+      }
     },
-    decrement: (state) => {
-      state.value -= 1;
+    decrement: (
+      state,
+      action: PayloadAction<{ type?: "amount" | "min" | "max" }>
+    ) => {
+      if (action.payload?.type === "amount") {
+        state.amount -= 1;
+      } else if (action.payload?.type === "min") {
+        state.min -= 1;
+      } else if (action.payload?.type === "max") {
+        state.max -= 1;
+      } else {
+        state.value -= 1;
+      }
     },
     incrementByAmount: (state, action: PayloadAction<number>) => {
       state.value += action.payload;
@@ -29,7 +52,6 @@ export const counterSlice = createSlice({
   },
 });
 
-// Action creators are generated for each case reducer function
 export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 export default counterSlice.reducer;
